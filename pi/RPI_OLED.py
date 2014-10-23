@@ -37,6 +37,8 @@ def Write_Data(dataByte):
         GPIO.output(11, False)
         dataByte = dataByte << 1
         GPIO.output(11, True)
+        
+# http://www.buydisplay.com/default/oled-3-2-inch-displays-module-companies-with-driver-circuit-blue-on-black
     
 # Translated from C to Python
 #
