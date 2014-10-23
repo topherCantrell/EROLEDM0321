@@ -22,7 +22,8 @@ spi = spidev.SpiDev()
 spi.open(0,0)
 spi.cshigh = False   # CS active low
 spi.lsbfirst = False # Send MSB first
-spi.mode = 0         # doesn't seem like the right mode, but it is working
+spi.mode = 0         # TODO use scope to fix this
+#spi.max_speed_hz = 0 # TODO fix this
 #
 def Write_Instruction(dataByte):
     GPIO.output(24,False) # Select command register
@@ -578,19 +579,21 @@ def Write_number(value, column):
         Data_processing(numberImages[16*value+i])
     
 def adj_Contrast():
-    # TODO: read the keyboard and adjust the contrast
     
-    number1=number/100;
-    number2=number%100/10;
-    number3=number%100%10;
-    Write_number(number1,0);
-    Write_number(number2,2);
-    Write_number(number3,4);
+    Display_Picture(pic1)
     
+    while(True):
+        number = (int(input("Enter a contrast value: ")))
     
-    Write_Instruction(0xC1)
-    Write_Data(mod)
-    pass
+        number1=number/100;
+        number2=number%100/10;
+        number3=number%100%10;
+        Write_number(number1,0);
+        Write_number(number2,2);
+        Write_number(number3,4);    
+    
+        Write_Instruction(0xC1)
+        Write_Data(number)    
     
 def Display_Chess(value1,value2):
     Set_Row_Address(0)
@@ -663,7 +666,7 @@ def main():
     Write_Instruction(0xa4) # --all Display off
     time.sleep(1.0)
 
-    Write_Instruction(0xa6) # --set normal display
+    Write_Instruction(0xa6) # --set normal display    
 
     print "Picture 1 ..."
     Display_Picture(pic1)
