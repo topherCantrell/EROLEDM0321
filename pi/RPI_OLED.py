@@ -6,20 +6,42 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(25,GPIO.OUT) # 25 RESET (low to reset)
 GPIO.output(25,True)    #    Release the RESET
 
+GPIO.setup(24,GPIO.OUT)   # 24 D/C
+
 def resetOLED():
     GPIO.output(25,False) # Activate reset
     time.sleep(0.5 )      # Hold it low for half a second
     GPIO.output(25,True)  # Release reset
     time.sleep(1.0)       # Give the chip a second to come up
+ 
+# Using spidev for SPI
+#   
+import spidev
+#
+spi = spidev.SpiDev()
+spi.open(0,0)
+spi.cshigh = False   # CS active low
+spi.lsbfirst = False # Send MSB first
+spi.mode = 0         # doesn't seem like the right mode, but it is working
+#
+def Write_Instruction(dataByte):
+    GPIO.output(24,False) # Select command register
+    spi.writebytes([dataByte])
+#    
+def Write_Data(dataByte):
+    GPIO.output(24,True) # Select data register
+    spi.writebytes([dataByte])
 
-GPIO.setup(24,GPIO.OUT)  #  8 D/C
 
+"""
 # Bit-banging the SPI port
 #
 GPIO.setup(10,GPIO.OUT) # 10 MOSI
+#
 GPIO.setup(11,GPIO.OUT) # 11 SCLK
 GPIO.output(11,True)    #    Clock is idle-high
-GPIO.setup(8,GPIO.OUT)  #  7 Chip Select (active low)
+#
+GPIO.setup(8,GPIO.OUT)  #  8 Chip Select (active low)
 GPIO.output(8,False)    #    Select the chip
 #
 def Write_Instruction(dataByte):
@@ -37,7 +59,8 @@ def Write_Data(dataByte):
         GPIO.output(11, False)
         dataByte = dataByte << 1
         GPIO.output(11, True)
-        
+"""        
+
 # http://www.buydisplay.com/default/oled-3-2-inch-displays-module-companies-with-driver-circuit-blue-on-black
     
 # Translated from C to Python
@@ -445,10 +468,8 @@ pic2 = [
 0x00,0x38,0x00,0x00,0x00,0x00,0x1E,0x1F,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7F,        
 ]
     
-def Initial() :
-    
+def Initial():    
     Write_Instruction(0xFD) # Set Command Lock
-
     
     Write_Instruction(0xFD) # SET COMMAND LOCK 
     Write_Data(0x12) # UNLOCK 
@@ -490,7 +511,6 @@ def Initial() :
     Clear_ram()
     Write_Instruction(0xAF) # display ON
 
-
 def Clear_ram():
     Write_Instruction(0x15) 
     Write_Data(0x00)
@@ -501,8 +521,7 @@ def Clear_ram():
     Write_Instruction(0x5C)    
     for y in xrange(128):
         for x in xrange(120):
-            Write_Data(0x00)     
-    
+            Write_Data(0x00)         
 
 def Display_Picture(pic):
     Set_Row_Address(0)         
@@ -518,7 +537,6 @@ def Set_Row_Address(add):
     Write_Data(add)
     Write_Data(0x3f)
 
-# Set row address 0~64  for Gray mode
 def Set_Column_Address(add):
     add = 0x3f & add
     Write_Instruction(0x15) # SET SECOND PRE-CHARGE PERIOD  
@@ -551,12 +569,6 @@ def Data_processing(temp): # turns 1byte B/W data to 4 bye gray data
         Write_Data(d2)
         Write_Data(d3)
         Write_Data(d4)
-
-
-
-def ready():
-    resetOLED()
-    Initial()
 
 def Write_number(value, column):
     for i in xrange(16):
@@ -638,8 +650,7 @@ def DrawSingleAscii(x, y, char):
         str = asciiImages[ofs + i]
         Data_processing(str)
         
-def main():
-    
+def main():    
     print "Resetting display ..."
     resetOLED()
     
@@ -698,3 +709,7 @@ def main():
     
     print "Adjust contrast ..."
     adj_Contrast()
+
+if __name__ == "__main__":
+    main()
+    
