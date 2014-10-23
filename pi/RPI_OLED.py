@@ -12,18 +12,18 @@ def resetOLED():
     GPIO.output(25,True)  # Release reset
     time.sleep(1.0)       # Give the chip a second to come up
 
-GPIO.setup(8,GPIO.OUT)  #  8 D/C
+GPIO.setup(24,GPIO.OUT)  #  8 D/C
 
 # Bit-banging the SPI port
 #
 GPIO.setup(10,GPIO.OUT) # 10 MOSI
 GPIO.setup(11,GPIO.OUT) # 11 SCLK
 GPIO.output(11,True)    #    Clock is idle-high
-GPIO.setup(7,GPIO.OUT)  #  7 Chip Select (active low)
-GPIO.output(7,False)    #    Select the chip
+GPIO.setup(8,GPIO.OUT)  #  7 Chip Select (active low)
+GPIO.output(8,False)    #    Select the chip
 #
 def Write_Instruction(dataByte):
-    GPIO.output(8,False) # Select command register
+    GPIO.output(24,False) # Select command register
     for x in xrange(8):
         GPIO.output(10, (dataByte&0x80)!=0)    
         GPIO.output(11, False)
@@ -31,7 +31,7 @@ def Write_Instruction(dataByte):
         GPIO.output(11, True)   
 #
 def Write_Data(dataByte):
-    GPIO.output(8,True) # Select data register
+    GPIO.output(24,True) # Select data register
     for x in xrange(8):
         GPIO.output(10, (dataByte&0x80)!=0)    
         GPIO.output(11, False)
