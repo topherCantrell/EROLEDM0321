@@ -22,16 +22,24 @@ spi = spidev.SpiDev()
 spi.open(0,0)
 spi.cshigh = False   # CS active low
 spi.lsbfirst = False # Send MSB first
-spi.mode = 0         # TODO use scope to fix this
-#spi.max_speed_hz = 0 # TODO fix this
+spi.mode = 2         # Clock idle high, data on active-to-idle transition
+#spi.max_speed_hz = 500000 # TODO fix this 
+
+# mode 00 ... clock idle low,  data valid at beginning of pulse (low to high)
+# mode 01 ... clock idle low,  data valid at end of pulse (high to low)
+# mode 10 ... clock idle high, data valid at beginning of pulse (high to low)
+# mode 11 ... clock idle high, data valid at end of pulse (low to high)
 #
 def Write_Instruction(dataByte):
     GPIO.output(24,False) # Select command register
     spi.writebytes([dataByte])
 #    
+dataCount = 0
 def Write_Data(dataByte):
+    global dataCount
     GPIO.output(24,True) # Select data register
     spi.writebytes([dataByte])
+    dataCount = dataCount + 1
 
 
 """
@@ -654,6 +662,7 @@ def DrawSingleAscii(x, y, char):
         Data_processing(str)
         
 def main():    
+    global dataCount
     print "Resetting display ..."
     resetOLED()
     
@@ -669,7 +678,9 @@ def main():
     Write_Instruction(0xa6) # --set normal display    
 
     print "Picture 1 ..."
+    dataCount = 0
     Display_Picture(pic1)
+    print dataCount
     time.sleep(2.0)
     Write_Instruction(0xa7) # --set Inverse Display    
     time.sleep(2.0)
