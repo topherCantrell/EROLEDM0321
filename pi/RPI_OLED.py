@@ -677,19 +677,19 @@ def main():
     print "Picture 1 ..."
     Display_Picture(pic1)
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
     
     print "Picture 2 ..."
     Display_Picture(pic2)
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
 
     print "Credits ..."
@@ -699,12 +699,12 @@ def main():
     DrawString(0, 32, "WWW.BUY-DISPLAY.COM")
     DrawString(0, 48, "2013.04.22")
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
 
     print "Gray test ..."
     Gray_test() 
     time.sleep(2.0)
-    raw_input("ENTER")
+    #raw_input("ENTER")
     
     print "Fill patterns ..."
     Display_Chess(0x55,0xaa)
