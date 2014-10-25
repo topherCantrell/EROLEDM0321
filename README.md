@@ -46,9 +46,25 @@ The native SPI library on the Raspberry Pi has trouble sending 9-bit bytes. I us
 
 ## Software 
 
-Have to setup several registers. Link to SSD.
+The display uses a Solomon Systech chip, the SSD1322, to drive the display. The CMOS chip has many control registers and
+command sequences described in the reference manual:
 
-Link to Demo Code. Translated to python on the raspberry pi.
+[https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/docs/SSD1132.pdf](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/docs/SSD1322.pdf?raw=true)
+
+The chip is designed for a 480x128 OLED display, but its registers can be configured to work with
+the 256x64 display.
+
+The company has published demo code for the 256x64 display. The code is written in C. The code includes the initialization
+sequence and routines to draw on the display.
+
+[https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/docs/ER-OLEDM032-1_DemoCode.txt](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/docs/ER-OLEDM032-1_DemoCode.txt)
+
+I translated this C code to Python for use on the Raspberry Pi. See pi/RPI_OLED.py in this project.
+
+The demo code initializes the display and draws several screens. Then it enters a loop allowing you to type in
+new contrast values (0 to 255).
+
+These photographs of the running display (pardon the poor quality) show several of the screens from the demo.
 
 ![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/DemoRun.jpg)
 
