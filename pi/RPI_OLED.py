@@ -22,8 +22,8 @@ spi = spidev.SpiDev()
 spi.open(0,0)
 spi.cshigh = False   # CS active low
 spi.lsbfirst = False # Send MSB first
-spi.mode = 2         # Clock idle high, data on active-to-idle transition
-#spi.max_speed_hz = 500000 # TODO fix this 
+spi.mode = 3         # Clock idle high, data on 2nd edge (end of pulse)
+spi.max_speed_hz = 5000000  
 
 # mode 00 ... clock idle low,  data valid at beginning of pulse (low to high)
 # mode 01 ... clock idle low,  data valid at end of pulse (high to low)
@@ -34,12 +34,9 @@ def Write_Instruction(dataByte):
     GPIO.output(24,False) # Select command register
     spi.writebytes([dataByte])
 #    
-dataCount = 0
 def Write_Data(dataByte):
-    global dataCount
     GPIO.output(24,True) # Select data register
-    spi.writebytes([dataByte])
-    dataCount = dataCount + 1
+    spi.writebytes([dataByte])    
 
 
 """
@@ -589,6 +586,7 @@ def Write_number(value, column):
 def adj_Contrast():
     
     Display_Picture(pic1)
+    DrawString(6,0," Contrast level")
     
     while(True):
         number = (int(input("Enter a contrast value: ")))
@@ -662,7 +660,6 @@ def DrawSingleAscii(x, y, char):
         Data_processing(str)
         
 def main():    
-    global dataCount
     print "Resetting display ..."
     resetOLED()
     
@@ -678,19 +675,21 @@ def main():
     Write_Instruction(0xa6) # --set normal display    
 
     print "Picture 1 ..."
-    dataCount = 0
     Display_Picture(pic1)
-    print dataCount
     time.sleep(2.0)
+    raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
     time.sleep(2.0)
+    raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
     
     print "Picture 2 ..."
     Display_Picture(pic2)
     time.sleep(2.0)
+    raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
     time.sleep(2.0)
+    raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
 
     print "Credits ..."
@@ -700,10 +699,12 @@ def main():
     DrawString(0, 32, "WWW.BUY-DISPLAY.COM")
     DrawString(0, 48, "2013.04.22")
     time.sleep(2.0)
+    raw_input("ENTER")
 
     print "Gray test ..."
     Gray_test() 
     time.sleep(2.0)
+    raw_input("ENTER")
     
     print "Fill patterns ..."
     Display_Chess(0x55,0xaa)
@@ -721,7 +722,7 @@ def main():
     Display_Chess(0x00,0x00) # clear display
     time.sleep(1.0)
     
-    print "Adjust contrast ..."
+    print "Adjust contrast ..."    
     adj_Contrast()
 
 if __name__ == "__main__":
