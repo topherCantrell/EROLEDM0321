@@ -27,7 +27,20 @@ The interface options are:
 My board arrived with the jumpers set for "8-bit parallel for 6800 series microprocessor". I carefully changed the
 jumpers to "4-wire SPI interface".
 
-Link to interface document. 4-wire.
+Usually "4-wire SPI" means that both MOSI and MISO wires are used in a bidirectional connection. Usually "3-wire SPI" means that
+MOSI and MISO are combined into a single SI/SO line that handles communication.
+
+The SPI interface to the ER-OLEDM032 never sends data back to the processor. Despite the "3-wire" and "4-wire" terminology in the
+display documentation the interface is ALWAYS the traditional-4-wire-SPI, but the MISO wire is ignored.
+
+The term "4-wire" in the documentation refers to an extra signaling wire that is unrelated to the SPI interface.
+
+You talk to the display by sending a COMMAND byte followed by several DATA bytes. You must tell the display whether the byte
+you are writing is to be interpreted as a COMMAND or DATA. In the "4-wire" interface option you use a separate wire to
+select COMMAND or DATA. In the "3-wire" interface option you send the select as the first bit in a NINE bit SPI sequence.
+
+The native SPI library on the Raspberry Pi has trouble sending 9-bit bytes. I used the extra COMMAND/DATA wire and normal
+8-bit SPI writes.
 
 ![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/connect.jpg)
 
