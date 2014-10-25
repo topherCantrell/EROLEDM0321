@@ -5,7 +5,7 @@ ER-OLEDM032-1
 
 The ER-OLEDM032-1 is a 256x64 graphical OLED display. Each pixel is a 4-bit gray-scale value.
 
-![](http://www.buydisplay.com/default/oled-3-2-inch-displays-module-companies-with-driver-circuit-blue-on-black)
+[Buy-Display](http://www.buydisplay.com/default/oled-3-2-inch-displays-module-companies-with-driver-circuit-blue-on-black)
 
 The display board has four different interface options. I used the 4-wire SPI mode in this project to connect
 the display to a Raspberry Pi.
