@@ -37,8 +37,11 @@ def Write_Instruction(dataByte):
 def Write_Data(dataByte):
     GPIO.output(24,True) # Select data register
     spi.writebytes([dataByte])    
-
-
+#
+def writeDataBytes(dataBytes):
+    GPIO.output(24,True) # Select data register
+    spi.writebytes(dataBytes)
+    
 """
 # Bit-banging the SPI port
 #
@@ -212,6 +215,7 @@ specialChars = [
 0x04,0x10,0x04,0x10,0x08,0x10,0x08,0x10,0x10,0x10,0x20,0x90,0xC0,0x60,0x00,0x00,
 ]
 
+pic1Processed = []
 pic1 = [
 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
@@ -343,6 +347,7 @@ pic1 = [
 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
 ]
 
+pic2Processed = []
 pic2 = [
 0xFC,0x00,0x00,0x20,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7F,
@@ -529,6 +534,44 @@ def Clear_ram():
         for x in xrange(120):
             Write_Data(0x00)         
 
+def preprocessPicture(pic,buffer):
+    for i in xrange(64):
+        for j in xrange(32):
+            temp = pic[i*32+j]
+            temp1=temp&0x80
+            temp2=(temp&0x40)>>3
+            temp3=(temp&0x20)<<2
+            temp4=(temp&0x10)>>1
+            temp5=(temp&0x08)<<4
+            temp6=(temp&0x04)<<1
+            temp7=(temp&0x02)<<6
+            temp8=(temp&0x01)<<3
+            h11=temp1|(temp1>>1)|(temp1>>2)|(temp1>>3)
+            h12=temp2|(temp2>>1)|(temp2>>2)|(temp2>>3)
+            h13=temp3|(temp3>>1)|(temp3>>2)|(temp3>>3)
+            h14=temp4|(temp4>>1)|(temp4>>2)|(temp4>>3)
+            h15=temp5|(temp5>>1)|(temp5>>2)|(temp5>>3)
+            h16=temp6|(temp6>>1)|(temp6>>2)|(temp6>>3)
+            h17=temp7|(temp7>>1)|(temp7>>2)|(temp7>>3)
+            h18=temp8|(temp8>>1)|(temp8>>2)|(temp8>>3)
+            d1=h11|h12
+            d2=h13|h14
+            d3=h15|h16
+            d4=h17|h18
+    
+            buffer.append(d1)
+            buffer.append(d2)
+            buffer.append(d3)
+            buffer.append(d4)                
+    
+def displayPreprocessedPicture(buffer):
+    Set_Row_Address(0)         
+    Set_Column_Address(0)
+    Write_Instruction(0x5c)    
+    time.sleep(0.1)
+    writeDataBytes(buffer[0:4096]) # SPI library allows only 4096 at a time
+    writeDataBytes(buffer[4096:])    
+    
 def Display_Picture(pic):
     Set_Row_Address(0)         
     Set_Column_Address(0)
@@ -585,7 +628,8 @@ def Write_number(value, column):
     
 def adj_Contrast():
     
-    Display_Picture(pic1)
+    #Display_Picture(pic1)
+    displayPreprocessedPicture(pic1Processed)
     DrawString(6,0," Contrast level")
     
     while(True):
@@ -660,8 +704,12 @@ def DrawSingleAscii(x, y, char):
         Data_processing(str)
         
 def main():    
+    
+    preprocessPicture(pic1,pic1Processed)
+    preprocessPicture(pic2,pic2Processed)
+    
     print "Resetting display ..."
-    resetOLED()
+    resetOLED()    
     
     print "Initializing display ..."
     Initial()
@@ -675,7 +723,8 @@ def main():
     Write_Instruction(0xa6) # --set normal display    
 
     print "Picture 1 ..."
-    Display_Picture(pic1)
+    #Display_Picture(pic1)
+    displayPreprocessedPicture(pic1Processed)
     time.sleep(2.0)
     #raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
@@ -684,7 +733,8 @@ def main():
     Write_Instruction(0xa6) # --set normal display
     
     print "Picture 2 ..."
-    Display_Picture(pic2)
+    #Display_Picture(pic2)
+    displayPreprocessedPicture(pic2Processed)
     time.sleep(2.0)
     #raw_input("ENTER")
     Write_Instruction(0xa7) # --set Inverse Display    
