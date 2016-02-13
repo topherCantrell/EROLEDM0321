@@ -7,7 +7,8 @@ I had moved the jumpers on the back of the display to "8080 Parallel" for a prop
 I got the OLED.py class working. It implements an 8K screen buffer and a few X,Y,COLOR based drawing functions. Once the buffer is setup you call "draw_screen_buffer" to refresh the entire RAM. This takes over one second. The serial
 solution is terribly slow. I am hoping the parallel/Propeller version will be fast.
 
-TODO: Investigate the row/column addressing. That may help with windows.
+Turns out you can tell the OLED about the window (x,y,width,height) you are filling data into and it will advance the data cursor through RAM appropriately. That made the window implementation trivial.
+
 TODO: Add a general text library with text pictures
 TODO: make a Propeller (parallel) version
 

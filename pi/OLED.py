@@ -75,9 +75,6 @@ class OLED:
         self.Write_Instruction(0xA6) # normal display 
         self.Clear_ram()
         self.Write_Instruction(0xAF) # display ON
-        
-        # Make and clear the screen buffer
-        self.screenBuffer = [0]*8192
 
     def resetOLED(self):
         GPIO.output(25,False) # Activate reset
@@ -109,85 +106,33 @@ class OLED:
             for x in xrange(120):
                 self.Write_Data(0x00)   
     
+    def set_data_window(self,x,y,width,height):
+        
+        x = x / 4 # Column address is 4-pixel-groups (2 bytes)
+                  # Pass in x=0,4,8, etc
+                  
+        width = width / 4 # With limited to 4-pixel increments
+                          # Pass in width=4,8, etc
+        
+        self.Write_Instruction(0x75)
+        self.Write_Data(y)
+        self.Write_Data(y+height-1)
+        
+        self.Write_Instruction(0x15) 
+        self.Write_Data(0x1C+x)
+        self.Write_Data(0x1C+x+width-1)        
+        
+        
     def Set_Row_Address(self,add):
         self.Write_Instruction(0x75) # SET SECOND PRE-CHARGE PERIOD 
         add = 0x3f & add
         self.Write_Data(add)
         self.Write_Data(0x3f)
-    
+            
     def Set_Column_Address(self,add):
         add = 0x3f & add
         self.Write_Instruction(0x15) # SET SECOND PRE-CHARGE PERIOD  
         self.Write_Data(0x1c+add)
-        self.Write_Data(0x5b)
-    
-    def draw_screen_buffer(self):
-        self.Set_Row_Address(0)
-        self.Set_Column_Address(0)
-        self.Write_Instruction(0x5c)
+        self.Write_Data(0x5b)   
+     
         
-        for m in xrange(8192):
-            self.Write_Data(self.screenBuffer[m])
-        
-    def set_pixel(self,x,y,color):
-        color = color & 0x0F
-        ofs = y * 128 # 128 bytes (256 pixels) per row
-        ofs = ofs + x/2 # 2 pixels per byte across row
-        if x%2 ==0: # even
-            v = self.screenBuffer[ofs] & 0x0F
-            v = v | (color<<4)
-        else:
-            v = self.screenBuffer[ofs] & 0xF0
-            v = v | color
-        self.screenBuffer[ofs] = v     
-        
-    def draw_line(self,start, end,color):
-        """Bresenham's Line Algorithm       
-        """
-        # Setup initial conditions
-        x1, y1 = start
-        x2, y2 = end
-        dx = x2 - x1
-        dy = y2 - y1
-     
-        # Determine how steep the line is
-        is_steep = abs(dy) > abs(dx)
-     
-        # Rotate line
-        if is_steep:
-            x1, y1 = y1, x1
-            x2, y2 = y2, x2
-     
-        # Swap start and end points if necessary and store swap state
-        if x1 > x2:
-            x1, x2 = x2, x1
-            y1, y2 = y2, y1
-     
-        # Recalculate differentials
-        dx = x2 - x1
-        dy = y2 - y1
-     
-        # Calculate error
-        error = int(dx / 2.0)
-        ystep = 1 if y1 < y2 else -1
-     
-        # Iterate over bounding box generating points between start and end
-        y = y1
-        points = []
-        for x in range(x1, x2 + 1):
-            coord = (y, x) if is_steep else (x, y)
-            #
-            self.set_pixel(coord[0],coord[1],color)
-            #
-            error -= abs(dy)
-            if error < 0:
-                y += ystep
-                error += dx       
-    
-    def draw_rectangle(self,x,y,width,height, color):
-        for xx in xrange(width):
-            self.set_pixel(x+xx,y,color)
-            self.set_pixel(x+xx,y+height-1, color)
-        for yy in xrange(height):
-            self.set_pixel(x,y+yy,color)
-            self.set_pixel(x+width-1,y+yy,color)

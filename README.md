@@ -70,11 +70,16 @@ These photographs of the running display (pardon the poor quality) show several 
 
 ## Screen Buffer
 
-The OLED.py module contains the OLED class, which keeps an 8K byte screen buffer. You fill the buffer with your
-graphics using methods like "set_pixel", "draw_line", and "draw_rectangle". Then call "draw_screen_buffer" to
-copy the buffer to the display.
+The OLED.py module contains the OLED class that drives the OLED hardware.
 
-Updating the whole screen takes over a second. Next up is to allow the driver to work with smaller "windows"
-of the screen. I also need to make general text facilities.
+The OLEDWindow.py module contains a window implementation over the OLED object. You pass in the OLED
+driver object and the window parameters (x,y,width,height). The OLEDWindow object keeps a screen
+buffer for the defined window and draws it on the OLED hardware when prompted.
+
+You fill the windows with your graphics and draw the windows in the order you want them drawn on top of
+each other. There is no transparency between windows.
+
+You fill the window with your graphics using methods like "set_pixel", "draw_line", and 
+"draw_rectangle". Then call "draw_screen_buffer" to copy the buffer to the display.
 
 ![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/raster.png)
