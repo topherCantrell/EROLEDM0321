@@ -2,6 +2,8 @@ import spidev
 import time
 import RPi.GPIO as GPIO
 
+GPIO.setwarnings(False)
+
 class OLED:
     
     # Display is 256x64 pixels, 2 pixels per byte. The most-significant nibble
