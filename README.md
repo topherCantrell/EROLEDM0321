@@ -86,10 +86,10 @@ You fill the window with your graphics using methods like "set_pixel", "draw_lin
 
 Scoobie Snax in Italy added a lot of features to the code. Here is his test_shapes code.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/testShapes.png)
+![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/testShapes.jpg)
 
 I added text printing to the code.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/text.png)
+![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/text.jpg)
 
 
