@@ -90,6 +90,6 @@ Scoobie Snax in Italy added a lot of features to the code. Here is his test_shap
 
 I added text printing to the code.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/text.jpg)
+![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/text.JPG)
 
 
