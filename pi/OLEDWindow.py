@@ -87,10 +87,6 @@ class OLEDWindow:
             self.set_pixel(x,y+yy,color)
             self.set_pixel(x+width-1,y+yy,color)
 
-
-#########################################################################
-
-
     def DrawVLine(self,x,y,h,color):                # Draw vertical line
         self.draw_line((x, y), (x, y+h-1), color)
         
@@ -104,10 +100,10 @@ class OLEDWindow:
         self.DrawVLine(x+w-1, y, h, color)
 
     def DrawRFrame(self, x, y, w, h, r, color):     # Draw Rounded Corners Rectangle 
-        self.DrawHLine(x+r, y, w-2*r, color)      # Top
-        self.DrawHLine(x+r, y+h-1, w-2*r, color)  # Bottom
-        self.DrawVLine(x, y+r, h-2*r, color)      # Left
-        self.DrawVLine(x+w-1, y+r, h-2*r, color)  # Right
+        self.DrawHLine(x+r, y, w-2*r, color)        # Top
+        self.DrawHLine(x+r, y+h-1, w-2*r, color)    # Bottom
+        self.DrawVLine(x, y+r, h-2*r, color)        # Left
+        self.DrawVLine(x+w-1, y+r, h-2*r, color)    # Right
         # draw four corners
         self.DrawCircleHelper(x+r, y+r, r, 1, color)
         self.DrawCircleHelper(x+w-r-1, y+r, r, 2, color)
@@ -155,11 +151,15 @@ class OLEDWindow:
             self.set_pixel(x0+y, y0-x, color)
             self.set_pixel(x0-y, y0-x, color)
             
-    def DrawDisc(self, x0, y0, r, color):
+    def DrawDisc(self, x0, y0, r, color):               # Draw Filled Circle
         self.DrawVLine(x0, y0-r, 2*r+1, color)
         self.FillCircleHelper(x0, y0, r, 3, 0, color)
-
-
+        
+    def DrawTriangle(self, x0, y0, x1, y1, x2, y2,color):   # Draw a Triangle
+        self.draw_line((x0, y0), (x1, y1), color)
+        self.draw_line((x1, y1), (x2, y2), color)
+        self.draw_line((x2, y2), (x0, y0), color)
+        
     def DrawCircleHelper(self, x0, y0, r, cornername, color):
         f = 1 - r
         ddF_x = 1
