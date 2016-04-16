@@ -93,6 +93,8 @@ class OLED:
         self.spi.writebytes([dataByte])    
     
     def writeDataBytes(self,dataBytes):
+        if not dataBytes:
+            return
         GPIO.output(24,True) # Select data register
         self.spi.writebytes(dataBytes)
         
