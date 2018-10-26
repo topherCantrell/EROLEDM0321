@@ -8,7 +8,7 @@ The ER-OLEDM032-1 is a 256x64 graphical OLED display. Each pixel is a 4-bit gray
 The display board has four different interface options. I used the 4-wire SPI mode in this project to connect
 the display to a Raspberry Pi.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/oled-pi.jpg)
+![](oled-pi.jpg)
 
 ## Hardware 
 
@@ -42,7 +42,7 @@ select COMMAND or DATA. In the "3-wire" interface option you send the select as 
 The native SPI library on the Raspberry Pi has trouble sending 9-bit bytes. I used the extra COMMAND/DATA wire and normal
 8-bit SPI writes.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/connect.jpg)
+![](connect.jpg)
 
 ## Software 
 
@@ -66,7 +66,7 @@ new contrast values (0 to 255).
 
 These photographs of the running display (pardon the poor quality) show several of the screens from the demo.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/DemoRun.jpg)
+![](DemoRun.jpg)
 
 ## Screen Buffer
 
@@ -82,14 +82,14 @@ each other. There is no transparency between windows.
 You fill the window with your graphics using methods like "set_pixel", "draw_line", and 
 "draw_rectangle". Then call "draw_screen_buffer" to copy the buffer to the display.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/raster.png)
+![](raster.png)
 
 Scoobie Snax in Italy added a lot of features to the code. Here is his test_shapes code.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/testShapes.jpg)
+![](htestShapes.jpg)
 
 I added text printing to the code.
 
-![](https://github.com/topherCantrell/ER-OLEDM032-1/blob/master/text.JPG)
+![](text.JPG)
 
 
