@@ -106,16 +106,16 @@ class OLED:
         self.Write_Data(0x00)
         self.Write_Data(0x7f) 
         self.Write_Instruction(0x5C)    
-        for y in xrange(128):
-            for x in xrange(120):
+        for y in range(128):
+            for x in range(120):
                 self.Write_Data(0x00)   
     
     def set_data_window(self,x,y,width,height):
         
-        x = x / 4 # Column address is 4-pixel-groups (2 bytes)
+        x = int(x / 4) # Column address is 4-pixel-groups (2 bytes)
                   # Pass in x=0,4,8, etc
                   
-        width = width / 4 # With limited to 4-pixel increments
+        width = int(width / 4) # With limited to 4-pixel increments
                           # Pass in width=4,8, etc
         
         self.Write_Instruction(0x75)

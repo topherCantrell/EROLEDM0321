@@ -17,7 +17,10 @@ class OLEDWindow:
         self.height = height
         self.oled = oled
         # Make and clear the screen buffer
-        self.screenBuffer = [0]*(width/2)*height
+        self.screenBuffer = [0]*int((width/2)*height)
+        
+    def clear(self):
+        self.screenBuffer = [0]*int((self.width/2)*self.height)
         
     def draw_screen_buffer(self):
         self.oled.set_data_window(self.x,self.y,self.width,self.height)        
@@ -28,7 +31,7 @@ class OLEDWindow:
     def set_pixel(self,x,y,color):
         color = color & 0x0F
         ofs = y * self.width/2
-        ofs = ofs + x/2 # 2 pixels per byte across row
+        ofs = int(ofs + x/2) # 2 pixels per byte across row
         if x%2 ==0: # even
             v = self.screenBuffer[ofs] & 0x0F
             v = v | (color<<4)
@@ -39,11 +42,11 @@ class OLEDWindow:
 
     def draw_bw_image(self,x,y,width,height,color,data,offs):
         pos = offs
-        for yy in xrange(height):
+        for yy in range(height):
             ox = x
-            for xx in xrange(width/8):
+            for xx in range(int(width/8)):
                 mask = 128
-                for pp in xrange(8):
+                for pp in range(8):
                     if((data[pos] & mask)>0):
                         self.set_pixel(x,y,color)
                     else:
@@ -56,11 +59,11 @@ class OLEDWindow:
             
     def draw_big_bw_image(self,x,y,width,height,color,data,offs):
         pos = offs
-        for yy in xrange(height):
+        for yy in range(height):
             ox = x
-            for xx in xrange(width/8):
+            for xx in range(int(width/8)):
                 mask = 128
-                for pp in xrange(8):
+                for pp in range(8):
                     if((data[pos] & mask)>0):
                         self.set_pixel(x,y,color)
                         self.set_pixel(x+1,y,color)
@@ -121,10 +124,10 @@ class OLEDWindow:
                 error += dx       
     
     def draw_rectangle(self,x,y,width,height, color):
-        for xx in xrange(width):
+        for xx in range(width):
             self.set_pixel(x+xx,y,color)
             self.set_pixel(x+xx,y+height-1, color)
-        for yy in xrange(height):
+        for yy in range(height):
             self.set_pixel(x,y+yy,color)
             self.set_pixel(x+width-1,y+yy,color)
 
@@ -262,10 +265,10 @@ class OLEDWindow:
         for c in mes:
             self.draw_bw_image(x, y, 8, 8, color, FONT_5x7, ord(c)*8)
             x=x+8
-    def draw_big_text(self,x,y,mes,color):        
+    def draw_big_text(self,x,y,mes,color,xofs=16):        
         for c in mes:
             self.draw_big_bw_image(x, y, 8, 8, color, FONT_5x7, ord(c)*8)
-            x=x+16
+            x=x+xofs
 
         
         
