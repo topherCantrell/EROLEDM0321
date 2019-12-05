@@ -1,5 +1,5 @@
-from OLED import OLED
-from OLEDWindow import OLEDWindow
+from oled.oled_pi import OLED
+from oled.oled_window import OLEDWindow
 
 # The OLED hardware driver
 oled = OLED()

@@ -1,5 +1,12 @@
 # Journal
 
+## 12/5/2019
+
+I did a bit of refactoring now that I know more about python. And I tweaked the code to
+work in python3. I'm using this display in this project: 
+
+[https://github.com/topherCantrell/iot-clock](https://github.com/topherCantrell/iot-clock)
+
 ## 4/16/2016
 
 Scoobie and Davey making some great contributions.
