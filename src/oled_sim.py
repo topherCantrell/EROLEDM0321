@@ -43,6 +43,53 @@ class OLED(tkinter.Canvas):
                 self.create_rectangle(x * 4, y * 4, x * 4 + 4, y * 4 + 4, fill=color, width=0)
 
 
+SEVEN_SEGS = [
+    'abcdef',  # 0
+    'bc',  # 1
+    'abdeg',  # 2
+    'abcdg',  # 3
+    'bcfg',  # 4
+    'acdfg',  # 5
+    'acdefg',  # 6
+    'abc',  # 7
+    'abcdefg',  # 8
+    'abcdfg',  # 9
+]
+
+DIGIT_ANGLES = [
+    math.pi / 12 * 11,  # 4
+    math.pi / 12 * 10,  # 5
+    math.pi / 12 * 9,   # 6
+    math.pi / 12 * 8,   # 7
+    math.pi / 12 * 7,   # 8
+    math.pi / 12 * 6,   # 9
+    math.pi / 12 * 5,   # 10
+    math.pi / 12 * 4,   # 11
+    math.pi / 12 * 3,   # 12
+    math.pi / 12 * 2,   # 1
+    math.pi / 12 * 1,   # 2
+    math.pi / 12 * 0,   # 3
+]
+
+
+def sevenSegDigit(window, x, y, size, num, color):
+    spec = SEVEN_SEGS[num]
+    if 'a' in spec:
+        window.draw_line((x, y), (x + size, y), color)
+    if 'b' in spec:
+        window.draw_line((x + size, y), (x + size, y + size), color)
+    if 'c' in spec:
+        window.draw_line((x + size, y + size), (x + size, y + size * 2), color)
+    if 'd' in spec:
+        window.draw_line((x, y + size * 2), (x + size, y + size * 2), color)
+    if 'e' in spec:
+        window.draw_line((x, y + size), (x, y + size * 2), color)
+    if 'f' in spec:
+        window.draw_line((x, y), (x, y + size), color)
+    if 'g' in spec:
+        window.draw_line((x, y + size), (x + size, y + size), color)
+
+
 top = tkinter.Tk()
 top.geometry('1024x256+300+300')
 
@@ -50,65 +97,32 @@ oled = OLED(top)
 
 window = OLEDWindow(oled, 0, 0, 256, 64)
 
-"""
-for i in range(1, 4):
-    window.DrawHLine(10, i * 11, 83, 0xf)
-    window.DrawVLine(i * 20, 2, 40, 0xf)
-
-window.DrawCircle(10, 55, 3, 0xf)
-window.DrawCircle(23, 55, 5, 0xf)
-window.DrawCircle(40, 55, 8, 0xf)
-
-window.DrawDisc(56, 55, 3, 0xf)
-window.DrawDisc(67, 55, 5, 0xf)
-window.DrawDisc(85, 55, 8, 0xf)
-
-window.DrawFrame(100, 5, 25, 25, 0xf)
-window.DrawBox(100, 35, 25, 25, 0xf)
-
-window.DrawRBox(130, 5, 40, 55, 7, 0xf)
-window.DrawRFrame(175, 5, 40, 55, 7, 0xf)
-
-window.DrawTriangle(217, 60, 255, 60, 236, 5, 0xf)
-"""
 
 window.DrawCircle(128, 32, 30, 15)
 window.DrawCircle(128, 32, 29, 15)
-
-
-window.draw_text(148, 29, '3', 15, 5)
-window.draw_text(104, 29, '9', 15, 5)
-window.draw_text(126, 50, '6', 15, 5)
-
-
-#window.draw_text(105, 21, '10', 15, 5)
-#window.draw_text(114, 12, '11', 15, 5)
-window.draw_text(123, 8, '12', 15, 5)
-
-'''
-(158, 32)
-(153, 46)
-(143, 57)
-(128, 62)
-(114, 57)
-(103, 47)
-(98, 32)
-(103, 18)
-(113, 7) 11
-(128, 2) 12
-(142, 7) 1
-(153, 17) 2
-'''
+window.DrawBox(125, 29, 4, 4, 15)
 
 # Radius 32
 
+SIZE = 3
+
 for i in range(12):
-    angle = (math.pi * 2 / 12) * i
-    x1 = 128 + int(math.cos(angle) * 30)
-    y1 = 32 + int(math.sin(angle) * 30)
+    angle = (math.pi * 2 / 12) * i - math.pi / 2
+    x1 = 128 + int(math.cos(angle) * 20)
+    y1 = 32 + int(math.sin(angle) * 20)
     x2 = 128 + int(math.cos(angle) * 26)
     y2 = 32 + int(math.sin(angle) * 26)
-    window.draw_line((x1, y1), (x2, y2), 15)
+    x3 = 128 + int(math.cos(angle) * 30)
+    y3 = 32 + int(math.sin(angle) * 30)
+    window.draw_line((x2, y2), (x3, y3), 15)
+    sevenSegDigit(window, x1 - int(SIZE / 2), y1 - SIZE, SIZE, i % 10, 8)
+
+hour = (math.pi * 2 / 12) * 3.5 - math.pi / 2
+min = (math.pi * 2 / 12) * 10 - math.pi / 2
+
+window.draw_line((128, 32), (128 + int(math.cos(hour) * 15), 32 + int(math.sin(hour) * 15)), 15)
+window.draw_line((128, 32), (128 + int(math.cos(min) * 25), 32 + int(math.sin(min) * 25)), 15)
+
 
 window.draw_screen_buffer()
 
