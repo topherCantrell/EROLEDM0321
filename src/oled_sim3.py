@@ -1,6 +1,8 @@
 import math
 import tkinter
 
+from robot.result.keywordremover import AllKeywordsRemover
+
 from oled.oled_window import OLEDWindow
 
 
@@ -50,6 +52,7 @@ oled = OLED(top)
 
 window = OLEDWindow(oled, 0, 0, 256, 64)
 
+"""
 window.draw_text(2, 0, 'IT IS  HALF TEN', 15)
 window.draw_text(2, 8, 'QUARTER  TWENTY', 15)
 window.draw_text(2, 16, 'FIVE MINUTES TO', 15)
@@ -58,6 +61,21 @@ window.draw_text(2, 32, 'ONE  FOUR  FIVE', 15)
 window.draw_text(2, 40, 'SIX SEVEN EIGHT', 15)
 window.draw_text(2, 48, 'NINE TEN ELEVEN', 15)
 window.draw_text(2, 56, "TWELVE  O'CLOCK", 15)
+"""
+WORD_COORDS = {
+    'IT': (0, 0), 'IS': (3, 0), 'HALF': (7, 0), 'TEN': (12, 0),
+    'QUARTER': (0, 1), 'TWENTY': (9, 1),
+    'FIVE': (0, 2), 'MINUTES': (5, 2), 'TO': (13, 2),
+    'PAST': (0, 3), 'TWO': (5, 3), 'THREE': (10, 3),
+    'ONE': (0, 4), 'FOUR': (5, 4), 'FIVE ': (11, 4),  # Note the "FIVE " with a space
+    'SIX': (0, 5), 'SEVEN': (4, 5), 'EIGHT': (10, 5),
+    'NINE': (0, 6), 'TEN ': (5, 6), 'ELEVEN': (9, 6),  # Note the "TEN " with a space
+    'TWELVE': (0, 7), "O'CLOCK": (8, 7)
+}
+
+for word in WORD_COORDS:
+    coords = WORD_COORDS[word]
+    window.draw_text(coords[0] * 8, coords[1] * 8, word, 15)
 
 
 window.draw_screen_buffer()
