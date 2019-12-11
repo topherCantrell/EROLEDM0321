@@ -40,6 +40,13 @@ class OLEDWindow:
             v = v | color
         self.screenBuffer[ofs] = v
 
+    def draw_image(self, x, y, width, height, data):
+        pos = 0
+        for yy in range(height):
+            for xx in range(width):
+                self.set_pixel(x + xx, y + yy, data[pos])
+                pos += 1
+
     def draw_bw_image(self, x, y, width, height, color, data, offs):
         pos = offs
         for yy in range(height):
