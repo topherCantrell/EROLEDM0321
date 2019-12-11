@@ -64,23 +64,29 @@ class OLEDWindow:
             x = ox
             y = y + 1
 
-    def draw_big_bw_image(self, x, y, width, height, color, data, offs):
+    def draw_big_bw_image(self, x, y, width, height, color, data, offs, invert=False):
         pos = offs
+        if invert:
+            set_color = 0
+            clear_color = color
+        else:
+            set_color = color
+            clear_color = 0
         for yy in range(height):
             ox = x
             for xx in range(int(width / 8)):
                 mask = 128
                 for pp in range(8):
                     if((data[pos] & mask) > 0):
-                        self.set_pixel(x, y, color)
-                        self.set_pixel(x + 1, y, color)
-                        self.set_pixel(x, y + 1, color)
-                        self.set_pixel(x + 1, y + 1, color)
+                        self.set_pixel(x, y, set_color)
+                        self.set_pixel(x + 1, y, set_color)
+                        self.set_pixel(x, y + 1, set_color)
+                        self.set_pixel(x + 1, y + 1, set_color)
                     else:
-                        self.set_pixel(x, y, 0)
-                        self.set_pixel(x + 1, y, 0)
-                        self.set_pixel(x, y + 1, 0)
-                        self.set_pixel(x + 1, y + 1, 0)
+                        self.set_pixel(x, y, clear_color)
+                        self.set_pixel(x + 1, y, clear_color)
+                        self.set_pixel(x, y + 1, clear_color)
+                        self.set_pixel(x + 1, y + 1, clear_color)
                     mask = mask >> 1
                     x = x + 2
                 pos = pos + 1
@@ -274,9 +280,9 @@ class OLEDWindow:
             self.draw_bw_image(x, y, 8, 8, color, FONT_5x7, ord(c) * 8)
             x = x + xofs
 
-    def draw_big_text(self, x, y, mes, color, xofs=16):
+    def draw_big_text(self, x, y, mes, color, xofs=16, invert=False):
         for c in mes:
-            self.draw_big_bw_image(x, y, 8, 8, color, FONT_5x7, ord(c) * 8)
+            self.draw_big_bw_image(x, y, 8, 8, color, FONT_5x7, ord(c) * 8, invert)
             x = x + xofs
 
 

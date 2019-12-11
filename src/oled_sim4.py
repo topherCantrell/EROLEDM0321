@@ -119,6 +119,13 @@ oled = OLED(top)
 window = OLEDWindow(oled, 0, 0, 256, 64)
 
 window.draw_image(0, 0, 64, 64, data)
+window.draw_text(68, 5 + 6, 'Next show in:', 15)
+window.draw_text(68, 20 + 6, ' 5 Days', 15)
+window.draw_text(68, 30 + 6, '23 Hours', 15)
+window.draw_text(68, 40 + 6, '45 Minutes', 15)
+
+window.DrawBox(193, 44, 16 * 4 - 3, 18, 15)
+window.draw_big_text(195, 46, 'LIVE', 15, 14, invert=True)
 
 window.draw_screen_buffer()
 
