@@ -1,5 +1,9 @@
 # Journal
 
+## 1/2/2023
+
+I changed the code to python3 now that python2 is EOL.
+
 ## 12/5/2019
 
 I did a bit of refactoring now that I know more about python. And I tweaked the code to
