@@ -55,7 +55,7 @@ GPIO.output(8,False)    #    Select the chip
 #
 def Write_Instruction(dataByte):
     GPIO.output(24,False) # Select command register
-    for x in xrange(8):
+    for x in range(8):
         GPIO.output(10, (dataByte&0x80)!=0)    
         GPIO.output(11, False)
         dataByte = dataByte << 1
@@ -63,7 +63,7 @@ def Write_Instruction(dataByte):
 #
 def Write_Data(dataByte):
     GPIO.output(24,True) # Select data register
-    for x in xrange(8):
+    for x in range(8):
         GPIO.output(10, (dataByte&0x80)!=0)    
         GPIO.output(11, False)
         dataByte = dataByte << 1
@@ -530,13 +530,13 @@ def Clear_ram():
     Write_Data(0x00)
     Write_Data(0x7f) 
     Write_Instruction(0x5C)    
-    for y in xrange(128):
-        for x in xrange(120):
+    for y in range(128):
+        for x in range(120):
             Write_Data(0x00)         
 
 def preprocessPicture(pic,buffer):
-    for i in xrange(64):
-        for j in xrange(32):
+    for i in range(64):
+        for j in range(32):
             temp = pic[i*32+j]
             temp1=temp&0x80
             temp2=(temp&0x40)>>3
@@ -576,8 +576,8 @@ def Display_Picture(pic):
     Set_Row_Address(0)         
     Set_Column_Address(0)
     Write_Instruction(0x5c)    
-    for i in xrange(64):
-        for j in xrange(32):
+    for i in range(64):
+        for j in range(32):
             Data_processing(pic[i*32+j])
 
 def Set_Row_Address(add):
@@ -620,7 +620,7 @@ def Data_processing(temp): # turns 1byte B/W data to 4 bye gray data
         Write_Data(d4)
 
 def Write_number(value, column):
-    for i in xrange(16):
+    for i in range(16):
         Set_Row_Address(i);
         Set_Column_Address(column);
         Write_Instruction(0x5C); 
@@ -649,10 +649,10 @@ def Display_Chess(value1,value2):
     Set_Row_Address(0)
     Set_Column_Address(0)       
     Write_Instruction(0x5c)    
-    for i in xrange(32):
-        for k in xrange(32):
+    for i in range(32):
+        for k in range(32):
             Data_processing(value1)
-        for k in xrange(32):
+        for k in range(32):
             Data_processing(value2)    
 
 def Gray_test():
@@ -660,17 +660,17 @@ def Gray_test():
     Set_Column_Address(0)
     Write_Instruction(0x5c)
     
-    for m in xrange(32):
+    for m in range(32):
         j = 0
-        for k in xrange(16):
-            for i in xrange(8):
+        for k in range(16):
+            for i in range(8):
                 Write_Data(j)
             j = j + 0x11        
     
-    for m in xrange(32):
+    for m in range(32):
         j = 255
-        for k in xrange(16):
-            for i in xrange(8):
+        for k in range(16):
+            for i in range(8):
                 Write_Data(j)
             j = j - 0x11
 
@@ -687,16 +687,16 @@ def DrawString(x, y, pStr):
             
 def DrawSpecialChar(x, y, s):
     s = s - 0x80
-    for i in xrange(16):
+    for i in range(16):
         Set_Row_Address(y+i)
         Set_Column_Address(x)
         Write_Instruction(0x5c)
-        for k in xrange(2):
+        for k in range(2):
             Data_processing(specialChars[s*16+k+i*2])
 
 def DrawSingleAscii(x, y, char):
     ofs = (char-32) * 16
-    for i in xrange(16):
+    for i in range(16):
         Set_Row_Address(y+i)
         Set_Column_Address(x)
         Write_Instruction(0x5c)
@@ -708,13 +708,13 @@ def main():
     preprocessPicture(pic1,pic1Processed)
     preprocessPicture(pic2,pic2Processed)
     
-    print "Resetting display ..."
+    print("Resetting display ...")
     resetOLED()    
     
-    print "Initializing display ..."
+    print("Initializing display ...")
     Initial()
 
-    print "All pixels on/off ..."
+    print("All pixels on/off ...")
     Write_Instruction(0xa5) # --all display on
     time.sleep(1.0)
     Write_Instruction(0xa4) # --all Display off
@@ -722,7 +722,7 @@ def main():
 
     Write_Instruction(0xa6) # --set normal display    
 
-    print "Picture 1 ..."
+    print("Picture 1 ...")
     #Display_Picture(pic1)
     displayPreprocessedPicture(pic1Processed)
     time.sleep(2.0)
@@ -732,7 +732,7 @@ def main():
     #raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
     
-    print "Picture 2 ..."
+    print("Picture 2 ...")
     #Display_Picture(pic2)
     displayPreprocessedPicture(pic2Processed)
     time.sleep(2.0)
@@ -742,7 +742,7 @@ def main():
     #raw_input("ENTER")
     Write_Instruction(0xa6) # --set normal display
 
-    print "Credits ..."
+    print("Credits ...")
     Display_Chess(0x00,0x00) # clear display
     DrawString(0, 0, "**** \x80\x81\x82\x83 ****")  
     DrawString(0, 16, "EASTRISING ")
@@ -751,12 +751,12 @@ def main():
     time.sleep(2.0)
     #raw_input("ENTER")
 
-    print "Gray test ..."
+    print("Gray test ...")
     Gray_test() 
     time.sleep(2.0)
     #raw_input("ENTER")
     
-    print "Fill patterns ..."
+    print("Fill patterns ...")
     Display_Chess(0x55,0xaa)
     time.sleep(1.0)
     Display_Chess(0xaa,0x55)
@@ -772,7 +772,7 @@ def main():
     Display_Chess(0x00,0x00) # clear display
     time.sleep(1.0)
     
-    print "Adjust contrast ..."    
+    print("Adjust contrast ...")
     adj_Contrast()
 
 if __name__ == "__main__":
